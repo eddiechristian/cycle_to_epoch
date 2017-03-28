@@ -1,0 +1,11 @@
+[package]
+name = "time_tsc"
+version = "0.1.0"
+authors = ["eddie christian <eddie.christian@ironnetcybersecurity.com>"]
+
+[dependencies]
+libc = "0.2.16"
+
+[dependencies.cpu_cycle_counter]
+git = "ssh://git@github.com/IronNetCybersecurity/rust-deps"
+rev = "67b78259ff44142e20640d2ed4c3da3254df533d"
