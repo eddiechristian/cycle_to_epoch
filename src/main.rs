@@ -32,7 +32,7 @@ fn get_ts_diff(ts1 : &mut libc::timespec, ts2 : &mut libc::timespec) ->  libc::t
 pub fn get_ts() -> libc::timespec {
     unsafe {
         let mut timespec: libc::timespec = mem::uninitialized();
-        let ret = libc::clock_gettime(libc::CLOCK_REALTIME, &mut timespec);
+        let ret = libc::clock_gettime(libc::CLOCK_MONOTONIC, &mut timespec);
         if ret != 0 { panic!("clock_gettime failed"); }
         timespec
     }
@@ -81,7 +81,7 @@ impl CgtClock {
         let tsc = unsafe { cpu_cycle_counter::rdtscp() };
         let tsc_64 =  tsc as f64;
         println!("ed tsc {:?} tsc_64 {:?}", tsc,tsc_64);
-        
+
         let denominator = tsc_64 /self.ticks_per_nanosec;
         self.get_time_spec(ts,denominator as i64);
     }
