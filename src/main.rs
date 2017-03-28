@@ -8,7 +8,7 @@ pub const NANO_SECONDS_IN_SEC: i64 = 1000000000;
 fn main() {
     let tsc = unsafe { cpu_cycle_counter::rdtscp() };
     let ts = get_ts();
-    println!("tsc: {:?}\nts: {:?}",tsc,ts.tv_nsec);
+    println!("tsc: {:?}\nts\n\ttv_sec: {:?} \n\ttv_nsec: {:?}",tsc,ts.tv_sec, ts.tv_nsec);
     let mut clk = CgtClock::default();
     let mut timespec: libc::timespec = unsafe { mem::uninitialized()};
     clk.get_cycle_time_as_ts(&mut timespec);
@@ -68,6 +68,7 @@ impl CgtClock {
         let tmp_ts = get_ts_diff(&mut end_ts,&mut begin_ts);
         let nsec_elapsed : i64 = tmp_ts.tv_sec * 1000000000 + tmp_ts.tv_nsec;
         self.ticks_per_nanosec = (end_tsc - begin_tsc) as f64 /nsec_elapsed as f64;
+        println!("ticks_per_nanosec {:?}", self.ticks_per_nanosec);
     }
 
 
@@ -78,7 +79,10 @@ impl CgtClock {
             self.calibrated = true;
         }
         let tsc = unsafe { cpu_cycle_counter::rdtscp() };
-        let denominator = tsc as f64 /self.ticks_per_nanosec as f64;
+        let tsc_64 =  tsc as f64;
+        println!("ed tsc {:?} tsc_64 {:?}", tsc,tsc_64);
+        
+        let denominator = tsc_64 /self.ticks_per_nanosec;
         self.get_time_spec(ts,denominator as i64);
     }
 
